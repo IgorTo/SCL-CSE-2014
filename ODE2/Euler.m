@@ -5,7 +5,7 @@ function [res, t]=Euler(func, dt, y0, tend)
 %	f ... anonymous function, left side of diff.equation
 % 	y0 ... initial value
 
-t=0:dt:tend;
+t=0:dt:tend; %IgotTOOOO
 res=zeros(1, length(t));
 res(1)=y0;
 
