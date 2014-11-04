@@ -1,6 +1,6 @@
 function x1 = Newton( f, df, x0, eps )
 %NEWTON A function for solving the equation F(x)=0 by Newton's method.
-%   Usage: Newton(f, df, x0)
+%   Usage: Newton(f, df, x0, eps)
 %   f ... left hand-side function F(x), should be given by anonymous
 %   function
 %   df ... the derivative of left hand-side function F'(x), should be given
