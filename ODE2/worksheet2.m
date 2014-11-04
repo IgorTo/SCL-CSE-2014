@@ -7,8 +7,8 @@ p0=20;
 % The Analytical solution.
 p_ref=@(t)(200./(20-10.*exp(-7.*t)));
 
-% a)
-t=0:0.01:5;
+% A)
+t=0:0.01:5; 
 figure(1); plot(t, p_ref(t));
 
 % b)
