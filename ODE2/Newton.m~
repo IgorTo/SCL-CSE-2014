@@ -1,9 +1,0 @@
-function x = Newton( f, df, x0 )
-%NEWTON Summary of this function goes here
-%   Detailed explanation goes here
-
-while
-
-
-end
-
