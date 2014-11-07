@@ -1,0 +1,19 @@
+function [f,error]=AdamsL2(f,t_start,dt)
+error=0;
+x0=1;
+G=@(p,x0,dt) x0-p-dt/2*(7*p-7*p^2/10+7*x0-7*x0*p/10);
+dG=@(p,x0,dt) 1-dt/2*(7-7*p/10);
+for t = t_start + dt*( 1:(N) )
+    f(end+1)=f(end)+dt*.5*(Pprime(f(end) ,t)+ 7*(1-f(end)/10)*Newton(G,dG,f(end),x0,dt)); 
+   
+end
+
+end
+
+function dp= Pprime(p,t)    %Calculates de derivative for a certain p and time
+   dp=7*(1-p./10).*p;
+end
+
+function p = f_ex(t)        %Exact solution of the ODE at a certain time
+    p=200./(20-10.*exp(-7.*t));
+end
