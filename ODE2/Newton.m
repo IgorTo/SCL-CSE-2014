@@ -3,7 +3,7 @@ function zero = Newton(f, df, t, y0)
 % to compute a zero of a function f(p, t, y0)
 % with respect to p.
 %   df ... derivative of f
-%   t .... time, at which approx. is to be computed
+%   t .... time, at which initial approx. was computed
 %   y0 ... initial approximation value
 
 yold = y0+1;
