@@ -1,13 +1,19 @@
-function [res,t]=Adams(func, dt, y0, tend)
+function res = Adams(f, df, y0, dt, tend)
+%ADAMS(f,dt,y0,tend) solves ODE y' = f(t, y)
+%  with implicit Adams Moulton method.
+%   f ... function (right side of ODE)
+%  df ... derivative of f
+%  y0 ... initial value
+%  dt ... time step size
+% tend .. end of observed time enterval
 
-t=0:dt:tend;
+t = 0:dt:tend;
 
-res=zeros(1, length(t));
-res(1)=y0;
+res = zeros(1, length(t));
+res(1) = y0;
 
-x0=1;
-G=@(p,x0,dt) x0-p-dt/2*(7*p-7*p^2/10+7*x0-7*x0^2/10);
-dG=@(p,x0,dt) 1-dt/2*(7-14*x0/10);
+G = @(p,time,p0) p-p0-dt/2*(f(time, p0)+f(time+dt, p));
+dG = @(p,time,p0) 1-dt/2*df(time+dt, p);
 for i=1:length(res)-1
     res(i+1)=res(i)+dt*.5*(func(res(i) ,t)+func(Newton(G,dG,res(i),x0,dt),t+dt)); 
     
