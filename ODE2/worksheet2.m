@@ -50,6 +50,15 @@ errorImpEuler = zeros(1,6);
 errorAdams = zeros(1,6);
 errorAdamsL1 = zeros(1,6);
 errorAdamsL2 = zeros(1,6);
+
+% Init of stability arrays
+stabilityHeun=zeros(1,6);
+stabilityEuler=zeros(1,6);
+stabilityImpEuler=zeros(1,6);
+stabilityAdams=zeros(1,6);
+stabilityAdamsL1=zeros(1,6);
+stabilityAdamsL2=zeros(1,6);
+
 % Solving the ODE and plotting its solution for different dt
 for i=1:6
     time_dt = t0:dt:tend;
@@ -58,12 +67,14 @@ for i=1:6
     [p, time] = Euler(p_der, dt, p0, tend);
     figure(2); hold on; plot(time, p, sprintf('%c', colors(i+1)));
     errorEuler(i) = sqrt(sum((p_ref(time_dt)-p).^2).*dt./5);
+    stabilityEuler(i)=Stability(p, time_dt);
     
     
     % Heun
     [p, time] = Heun(p_der, dt, p0, tend);
     figure(3); hold on; plot(time, p, sprintf('%c',colors(i+1)));
     errorHeun(i)=sqrt(sum((p_ref(time_dt)-p).^2).*dt./5);
+    stabilityHeun(i)=Stability(p, time_dt);
     
     
     % Implicit Euler
@@ -72,6 +83,7 @@ for i=1:6
     time = t0:dt:success*dt;
     figure(4); hold on; plot(time, p, sprintf('%c',colors(i+1)));
     errorImpEuler(i)=sqrt(sum((p_ref(time)-p).^2).*dt./5);
+    stabilityImpEuler(i)=Stability(p, time_dt);
     
     
     % Adams
@@ -80,20 +92,23 @@ for i=1:6
     time = t0:dt:success*dt;
     figure(5); hold on; plot(time, p, sprintf('%c',colors(i+1)));
     errorAdams(i)=sqrt(sum((p_ref(time)-p).^2).*dt./5);
+    stabilityAdams(i)=Stability(p, time_dt);
     
     
     % Adams Linearisation #1
     p = AdamsL1(dt, p0, tend); % Solution
     figure(6); hold on; plot(time_dt, p, sprintf('%c',colors(i+1))); % Plot
     errorAdamsL1(i)=sqrt(sum((p_ref(time_dt)-p).^2).*dt./5); % Error
+    stabilityAdamsL1(i)=Stability(p, time_dt);
    
     % Adams Linearisation #2
     p = AdamsL2(dt, p0, tend); % Solution
     figure(7); hold on; plot(time_dt, p, sprintf('%c',colors(i+1))); % Plot
     errorAdamsL2(i)=sqrt(sum((p_ref(time_dt)-p).^2).*dt./5); % Error
+    stabilityAdamsL2(i)=Stability(p, time_dt);
     
     
-    %go to the next dt
+    % go to the next dt
     dt = dt/2;
 end
 
@@ -190,4 +205,17 @@ t = uitable(tab6,'Data',data,'ColumnName',cnames,'RowName',rnames);
 % Set width and height
 t.Position(3) = t.Extent(3);
 t.Position(4) = t.Extent(4);
+
+% Stable cases Plot
+
+cnames = {'dt=1/2','dt=1/4','dt=1/8','dt=1/16','dt=1/32'};
+rnames = {'Explicit Euler', 'Heun', 'Implicit Euler', 'Adams-Moulton', 'Adams-Moulton L1', 'Adams-Moulton L2'};
+tab7 = uitab(tabgp,'Title','Stable cases');
+data = [stabilityEuler(2:6); stabilityHeun(2:6); stabilityImpEuler(2:6); stabilityAdams(2:6); stabilityAdamsL1(2:6); stabilityAdamsL2(2:6)];
+% Create the uitable
+t = uitable(tab7,'Data',data,'ColumnName',cnames,'RowName',rnames);
+% Set width and height
+t.Position(3) = t.Extent(3);
+t.Position(4) = t.Extent(4);
+
 
