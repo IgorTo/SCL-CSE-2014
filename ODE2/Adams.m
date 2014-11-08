@@ -17,6 +17,7 @@ dG = @(p,time,p0) (1-dt/2*df(p, time+dt));
 
 for i=1:l-1
     N = Newton(G, dG, t(i), res(i));
+	disp(N)
     if isnan(N)
         break;
     else

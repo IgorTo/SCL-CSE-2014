@@ -42,18 +42,20 @@ axis([t0 tend 0 20]); xlabel('time'); ylabel('population'); title('AdamsL1');
 
 % Solving the ODE and plotting its solution for different dt
 for i=1:6
-    [p, time] = Euler(p_der, dt, p0, tend);
-    figure(2); hold on; plot(time, p, sprintf('%c', colors(i+1)));
-    errorEuler(i) = sqrt(sum((p_ref(t0:dt:tend)-p).^2).*dt./5);
+    time_dt=t0:dt:tend;
+
+    p = Euler(p_der, dt, p0, tend);
+    figure(2); hold on; plot(time_dt, p, sprintf('%c', colors(i+1)));
+    errorEuler(i) = sqrt(sum((p_ref(time_dt)-p).^2).*dt./5);
     
     
     
-    [p, time] = Heun(p_der, dt, p0, tend);
-    figure(3); hold on; plot(time, p, sprintf('%c',colors(i+1)));
-    errorHeun(i)=sqrt(sum((p_ref(t0:dt:tend)-p).^2).*dt./5);
+    p = Heun(p_der, dt, p0, tend);
+    figure(3); hold on; plot(time_dt, p, sprintf('%c',colors(i+1)));
+    errorHeun(i)=sqrt(sum((p_ref(time_dt)-p).^2).*dt./5);
     
     
-     
+         
     p = Adams(p_der, dp_der, p0, dt, tend);
     success = length(p)-1;
     time = t0:dt:success*dt;
@@ -62,13 +64,13 @@ for i=1:6
     
     % Adams Linearisation #1
     p=AdamsL1(dt, p0, tend); % Solution
-    figure(5); hold on; plot(time, p, sprintf('%c',colors(i+1))); % Plot
-    errorAdamsL1(i)=sqrt(sum((p_ref(t0:dt:tend)-p).^2).*dt./5); % Error
+    figure(5); hold on; plot(time_dt, p, sprintf('%c',colors(i+1))); % Plot
+    errorAdamsL1(i)=sqrt(sum((p_ref(time_dt)-p).^2).*dt./5); % Error
    
     % Adams Linearisation #2
     p=AdamsL2(dt, p0, tend); % Solution
-    figure(6); hold on; plot(time, p, sprintf('%c',colors(i+1))); % Plot
-    errorAdamsL2(i)=sqrt(sum((p_ref(t0:dt:tend)-p).^2).*dt./5); % Error
+    figure(6); hold on; plot(time_dt, p, sprintf('%c',colors(i+1))); % Plot
+    errorAdamsL2(i)=sqrt(sum((p_ref(time_dt)-p).^2).*dt./5); % Error
     dt=dt/2;
 end
 
@@ -152,4 +154,3 @@ t = uitable(tab5,'Data',data,'ColumnName',cnames,'RowName',rnames);
 % Set width and height
 t.Position(3) = t.Extent(3);
 t.Position(4) = t.Extent(4);
-

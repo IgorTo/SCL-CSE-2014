@@ -13,13 +13,17 @@ iterat = 0;
 
 while abs(yold-ynew)>1e-4
     yold = ynew;
+
     %stopping criteria (if eq. is not solvable):
-    if (df(yold, t, y0) == 0 || iterat > 3000)
+    if (df(yold, t, y0) == 0 || iterat > 2000)
         ok = 0;
+	disp(df(yold, t, y0))
+	disp(iterat)
         break;
     else
         ynew = yold - f(yold, t, y0)/df(yold, t, y0);
     end
+    iterat=iterat+1;
 end
 
 if ok==0
