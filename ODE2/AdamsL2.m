@@ -1,23 +1,13 @@
-function [res,t]=AdamsL2(func, dt, y0, tend)
-t=0:dt:tend;
+function res=AdamsL2(dt, y0, tend)
 
-res=zeros(1, length(t));
-res(1)=y0;
 
-x0=1;
-G=@(p,x0,dt) x0-p-dt/2*(7*p-7*p^2/10+7*x0-7*x0*p/10);
-dG=@(p,x0,dt) 1-dt/2*(7-7*p/10);
+res=zeros(1, tend/dt);
+res(1)=y0; % Initial value.
+
+P=@(y0, dt)(y0+dt/2*(7*y0-7/10*y0^2))/(1+dt/2*(7*y0/10-7)); % The linearisation #2. We do not need the Newton method -> the polynomial's order is 1.
+
 for i=1:length(res)-1
-    res(i+1)=res(i)+dt*.5*(func(res(i) ,t)+ 7*(1-res(i)/10)*Newton(G,dG,res(i),x0,dt)); 
-   
+    res(i+1)=P(res(i), dt);
 end
-
-end
-
-function dp= Pprime(p,t)    %Calculates de derivative for a certain p and time
-   dp=7*(1-p./10).*p;
-end
-
-function p = f_ex(t)        %Exact solution of the ODE at a certain time
-    p=200./(20-10.*exp(-7.*t));
+ 
 end
