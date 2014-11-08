@@ -59,15 +59,15 @@ for i=1:6
     figure(4); hold on; plot(time, p, sprintf('%c',colors(i+1)));
     errorAdams(i)=sqrt(sum((p_ref(t0:dt:tend)-p).^2).*dt./5);
     
+    % Adams Linearisation #1
+    p=AdamsL1(dt, p0, tend); % Solution
+    figure(5); hold on; plot(time, p, sprintf('%c',colors(i+1))); % Plot
+    errorAdamsL1(i)=sqrt(sum((p_ref(t0:dt:tend)-p).^2).*dt./5); % Error
    
-    [p,time]=AdamsL1(p_der, dt, p0, tend);
-    figure(5); hold on; plot(time, p, sprintf('%c',colors(i+1)));
-    errorAdamsL1(i)=sqrt(sum((p_ref(t0:dt:tend)-p).^2).*dt./5);
-   
-    [p,time]=AdamsL2(p_der, dt, p0, tend);
-    
-    figure(6); hold on; plot(time, p, sprintf('%c',colors(i+1)));
-    errorAdamsL2(i)=sqrt(sum((p_ref(t0:dt:tend)-p).^2).*dt./5);
+    % Adams Linearisation #2
+    p=AdamsL2(dt, p0, tend); % Solution
+    figure(6); hold on; plot(time, p, sprintf('%c',colors(i+1))); % Plot
+    errorAdamsL2(i)=sqrt(sum((p_ref(t0:dt:tend)-p).^2).*dt./5); % Error
     dt=dt/2;
 end
 
