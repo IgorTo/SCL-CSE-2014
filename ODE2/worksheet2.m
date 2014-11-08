@@ -143,7 +143,7 @@ tabgp = uitabgroup(f,'Position',[.05 .6 .95 .3]);
 cnames = {'dt=1/2','dt=1/4','dt=1/8','dt=1/16','dt=1/32'};
 rnames = {'Error','Error red.'};
 
-tab1 = uitab(tabgp,'Title','Euler implicit');
+tab1 = uitab(tabgp,'Title','Explicit Euler');
 data = [errorEuler(2:6); errorEuler_Red(1:5)];
 % Create the uitable
 t = uitable(tab1,'Data',data,'ColumnName',cnames,'RowName',rnames);
