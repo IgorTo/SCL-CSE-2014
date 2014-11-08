@@ -12,13 +12,13 @@ function  y = ImplicitEuler(f, df, y0, dt, tend)
 y = [y0]; %assumption: t0 = 0
 steps = tend/dt;
 
-G = @(p, time, start) (p-dt*f(time, p)-start);
-dG = @(p, time, start) (1-dt*df(time, p));
+G = @(p, time, start) (p-dt*f(time+dt, p)-start);
+dG = @(p, time, start) (1-dt*df(time+dt, p));
 for k=1:steps
-    N = Newton(G, dG, dt*k, y(k));
+    N = Newton(G, dG, dt*(k-1), y(k));
     %check for stopping criteria (if eq is not solvable):
     if isnan(N)
-        break
+        break;
     else
         y(k+1) = N;
     end
