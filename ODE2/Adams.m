@@ -1,5 +1,5 @@
 function res = Adams(f, df, y0, dt, tend)
-%ADAMS(f,dt,y0,tend) solves ODE y' = f(t, y)
+%ADAMS(f,dt,y0,tend) solves ODE y' = f(y, t)
 %  with implicit Adams Moulton method.
 %   f ... function (right side of ODE)
 %  df ... derivative of f
@@ -12,8 +12,8 @@ l = length(t);
 res = zeros(1, l); %l=steps+1
 res(1) = y0;
 
-G = @(p,time,p0) (p-p0-dt/2*(f(time, p0)+f(time+dt, p)));
-dG = @(p,time,p0) (1-dt/2*df(time+dt, p));
+G = @(p,time,p0) (p-p0-dt/2*(f(p0, time)+f(p, time+dt)));
+dG = @(p,time,p0) (1-dt/2*df(p, time+dt));
 for i=1:l-1
     N = Newton(G, dG, t(i), y(i));
     if isnan(N)

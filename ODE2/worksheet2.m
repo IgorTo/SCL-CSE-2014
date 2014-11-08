@@ -1,7 +1,8 @@
 close all; clear all;
 
 % The problem definition.
-p_der=@(p, t)(7*(1-p./10).*p);
+p_der = @(p, t)(7*(1-p./10).*p);
+dp_der = @(p, t)(7 - 7*p./5);
 p0=20;
 
 % The Analytical solution.
@@ -11,7 +12,7 @@ p_ref=@(t)(200./(20-10.*exp(-7.*t)));
 t=0:0.01:5; 
 figure(1); plot(t, p_ref(t));
 
-% b)
+% B)
 t0=0;
 tend=5; % The Simulation parameters.
 dt=1; % The starting delta t.
@@ -41,26 +42,26 @@ axis([t0 tend 0 20]); xlabel('time'); ylabel('population'); title('AdamsL1');
 
 % Solving the ODE and plotting its solution for different dt
 for i=1:6
-    [p, time]=Euler(p_der, dt, p0, tend);
+    [p, time] = Euler(p_der, dt, p0, tend);
     figure(2); hold on; plot(time, p, sprintf('%c', colors(i+1)));
-    errorEuler(i)=sqrt(sum((p_ref(t0:dt:tend)-p).^2).*dt./5);
+    errorEuler(i) = sqrt(sum((p_ref(t0:dt:tend)-p).^2).*dt./5);
     
     
     
-    [p, time]=Heun(p_der, dt, p0, tend);
-    time
+    [p, time] = Heun(p_der, dt, p0, tend);
     figure(3); hold on; plot(time, p, sprintf('%c',colors(i+1)));
     errorHeun(i)=sqrt(sum((p_ref(t0:dt:tend)-p).^2).*dt./5);
     
     
      
-    [p,time]=Adams(p_der, dt, p0, tend);
-    
+    p = Adams(p_der, dp_der, p0, dt, tend);
+    success = length(p)-1;
+    time = t0:dt:success*dt;
     figure(4); hold on; plot(time, p, sprintf('%c',colors(i+1)));
-    errorAdams(i)=sqrt(sum((p_ref(t0:dt:tend)-p).^2).*dt./5);
+    errorAdams(i)=sqrt(sum((p_ref(time)-p).^2).*dt./5);
     
    
-    [p,time]=AdamsL1(p_der, dt, p0, tend);
+    p = AdamsL1(p_der, dt, p0, tend);
     figure(5); hold on; plot(time, p, sprintf('%c',colors(i+1)));
     errorAdamsL1(i)=sqrt(sum((p_ref(t0:dt:tend)-p).^2).*dt./5);
    
