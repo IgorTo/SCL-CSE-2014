@@ -41,7 +41,7 @@ axis([t0 tend 0 20]); xlabel('time'); ylabel('population'); title('AdamsL1');
 
 % The AdamsL2 figure
 figure(7); plot(t, p_ref(t), sprintf('%c',colors(1))); 
-axis([t0 tend 0 20]); xlabel('time'); ylabel('population'); title('AdamsL1');
+axis([t0 tend 0 20]); xlabel('time'); ylabel('population'); title('AdamsL2');
 
 % Initialization of error arrays
 errorEuler = zeros(1,6);
