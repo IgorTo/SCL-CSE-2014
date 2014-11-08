@@ -22,7 +22,6 @@ for k=1:steps
     else
         y(k+1) = N;
     end
-    %disp(y);
 end
 
 end
