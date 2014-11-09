@@ -154,7 +154,7 @@ end
 
 
 f=figure;
-tabgp = uitabgroup(f,'Position',[.05 .6 .95 .3]);
+tabgp = uitabgroup(f,'Position',[.05 .5 .95 .45]);
 cnames = {'dt=1/2','dt=1/4','dt=1/8','dt=1/16','dt=1/32'};
 rnames = {'Error','Error red.'};
 
