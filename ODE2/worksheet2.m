@@ -8,14 +8,13 @@ p0=20;
 % The Analytical solution.
 p_ref=@(t)(200./(20-10.*exp(-7.*t)));
 
-% A)
-t=0:0.01:5; 
-figure(1); plot(t, p_ref(t));
-
-% B)
 t0=0;
 tend=5; % The Simulation parameters.
 dt=1; % The starting delta t.
+
+t=0:0.01:5;
+figure(1); plot(t, p_ref(t));
+axis([t0 tend 0 20]); xlabel('time'); ylabel('population'); title('The Analytical solution');
 
 colors=['rbcygmk']; % Let's prepare the string of color codes for plotting.
 
@@ -59,7 +58,7 @@ stabilityAdams=zeros(1,6);
 stabilityAdamsL1=zeros(1,6);
 stabilityAdamsL2=zeros(1,6);
 
-% Solving the ODE and plotting its solution for different dt
+% Solving the ODE and plotting its solution for different dt.
 for i=1:6
     time_dt = t0:dt:tend;
     
@@ -82,7 +81,8 @@ for i=1:6
     success = length(p)-1;
     time = t0:dt:success*dt;
     figure(4); hold on; plot(time, p, sprintf('%c',colors(i+1)));
-    errorImpEuler(i)=sqrt(sum((p_ref(time)-p).^2).*dt./5);
+    if(length(p) == length(time_dt)) errorImpEuler(i)=sqrt(sum((p_ref(time)-p).^2).*dt./5); % Let's only calculate the error if we have actually calculated all of the solutions.
+    else errorImpEuler(i)=NaN; end
     stabilityImpEuler(i)=Stability(p, time_dt);
     
     
@@ -91,7 +91,9 @@ for i=1:6
     success = length(p)-1;
     time = t0:dt:success*dt;
     figure(5); hold on; plot(time, p, sprintf('%c',colors(i+1)));
-    errorAdams(i)=sqrt(sum((p_ref(time)-p).^2).*dt./5);
+
+    if (length(p) == length(time_dt)) errorAdams(i)=sqrt(sum((p_ref(time)-p).^2).*dt./5); % The same as for ImplicitEuler. 
+    else errorAdams(i)=NaN; end
     stabilityAdams(i)=Stability(p, time_dt);
     
     
@@ -121,19 +123,20 @@ figure(6); legend('Analytic', 'dt=1', 'dt=1/2', 'dt=1/4', 'dt=1/8', 'dt=1/16', '
 figure(7); legend('Analytic', 'dt=1', 'dt=1/2', 'dt=1/4', 'dt=1/8', 'dt=1/16', 'dt=1/32', 'Location', 'SouthEast');
 
 
-%H)
-%Reduced error
+% H)
+% Reduced error
 errorEuler_Red = zeros(1,6);
 errorHeun_Red = zeros(1,6);
 errorImpEuler_Red = zeros(1,6);
 errorAdams_Red = zeros(1,6);
 errorAdamsL1_Red = zeros(1,6);
 errorAdamsL2_Red = zeros(1,6);
+
 for i=1:5
-    if(errorEuler(i)<exp(30))  %Taking care of divisions by infinity. 
+    if(errorEuler(i)<exp(30))  % Taking care of enumerator being infinity. 
          errorEuler_Red(i)=errorEuler(i)/errorEuler(i+1);
     else 
-         errorEuler_Red(i)=NaN;   %If there is no reduced error to compute, a NaN appears on the table
+         errorEuler_Red(i)=NaN;   % If there is no reduced error to compute, a NaN appears on the table
     end
     
     if(errorHeun(i)<exp(30))
