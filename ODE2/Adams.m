@@ -1,6 +1,6 @@
 function res = Adams(f, df, y0, dt, tend)
 %ADAMS(f,dt,y0,tend) solves ODE y' = f(y, t)
-%  with implicit Adams Moulton method.
+%  with implicit Adams Moulton method. It also uses the Newton method to solve the equation G(x)=0 derived from the Adams-Moulton's method.
 %   f ... function (right side of ODE)
 %  df ... derivative of f
 %  y0 ... initial value
