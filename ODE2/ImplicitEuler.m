@@ -2,6 +2,7 @@ function  y = ImplicitEuler(f, df, y0, dt, tend)
 % IMPLICITEULER(f, df, y0, dt, tend) uses implicit Euler
 % method to solve ODE y' = f(y, t). Returns a vector of
 % approximations of y(t).
+% It also uses the Newton method to solve the equation G(x)=0 derived from the Implicit Euler's method.
 %   f  .... function of y and t, left side of ODE
 %   df .... derivative of f with respect to y
 %   y0 .... initial value
