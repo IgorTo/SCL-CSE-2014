@@ -7,7 +7,7 @@ function zero = Newton(f, df, t, y0)
 %   y0 ... initial approximation value
 
 yold = y0+1;
-ynew = y0; %starting approx. for the new value we are trying to compute
+ynew = y0; % Starting approx. for the new value we are trying to compute
 ok = 1;
 iterat = 0;
 
