@@ -22,7 +22,7 @@ M = SystemMatrix(Nx,Ny);
 
 
 % c) Gaus-Seidel iterative solver.
-
+% In progress.. -Igor %
 
 % d) Solving the given system in three ways.
 %Finding the function vector of the second derivative
