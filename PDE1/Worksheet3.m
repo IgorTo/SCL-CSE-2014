@@ -1,91 +1,119 @@
-%                WORKSHEET 3- Solving a PDE  (E. Breznik, J. C. Medina, I. Tominec)
+%   Worksheet 3
+% (I. Tominec, J. C. Medina, E. Breznik)
 %
-% This program solves
-close all; clear all;
+% -Solving partial differential equations.
+% -----------------------------------------------
+clear all; close all;
 
-% The problem definition.
-T_der = @(x, y)(-2.*pi^2.*sin(pi.*x).*sin(pi.*y));
+% Set parameter b of the problem:
+b = @(Nx, Ny, d) -2*pi*(sin(pi*repmat(1:Nx, 1, Ny)/(Nx+1)).*sin(pi*d(1:end)/(Ny+1)));
 
-N=[7,15,31,63];
+% b) Building the system matrix is done by SystemMatrix, e.g.
+% Nx = 5;
+% Ny = 5;
+% M = SystemMatrix(Nx,Ny)
+
+% c) Gaus-Seidel iterative solver call:
+% grid = GausSeidel(b, Nx, Ny)
+
+% d) Solving the given system in three ways. + e) Visualization of solutions.
+N = [7, 15, 31, 63];
+
+%We also calculate runtimes and storage for f):
+runtimes = zeros(3,4);
+storage = zeros(3,4);
+%
+%For the g. part of the worksheet, some error values are calculated here:
+errors = zeros(2,5);
+%
+%plotting:
 figure(1);
+set(gcf,'numbertitle','off','name','Direct solver with full matrix');
 figure(2);
+set(gcf,'numbertitle','off','name','Direct solver with sparse matrix');
 figure(3);
-plot_counter=1;
+set(gcf,'numbertitle','off','name','Gauss-Seidel solver');
+
 for i=1:4
-% b) Building the system matrix.
-Nx = N(i);
-Ny = N(i);
-hx = 1/(Nx+1);
-hy = 1/(Ny+1);
-M = SystemMatrix(Nx,Ny);
+    Nx = N(i);
+    Ny = N(i);
+    %this we need later for plotting:
+    [x,y] = meshgrid(1/(Nx+1)*(0:(Nx+1)), 1/(Ny+1)*(0:(Ny+1)));
+    %
+    tempvec = repmat(1:Ny,Nx,1);  % d = repmat(1:Ny,Nx,1)
+    be = b(Nx,Ny, tempvec);
 
+    M = SystemMatrix(Nx,Ny);
+    m = sparse(M);
+    
+    %   1. by MATLAB direct solver:
+    tic; sol1 = M\be; runtimes(1,i)=toc;
+    storage(1,i) = (Nx*Ny)^2 + 2*Nx*Ny;
+    %plot:
+    sol1 = fliplr(reshape(sol1, [Ny,Nx]))';
+    Temp = [zeros(1,Nx+2);zeros(Ny,1),sol1,zeros(Ny,1);zeros(1,Nx+2)];
+    figure(1);
+    subplot(2,4,i);
+    surf(x,y,Temp);
+    subplot(2,4,4+i);
+    contour(Temp);
+    title({'Nx,Ny=',Nx});
+    
+    %clear some memory: 
+    clear sol1;
+    
+    %   2. by direct solver on a sparse matrix:
+    tic; sol2 = m\be; runtimes(2,i)=toc;
+    storage(2,i) = (5*Nx*Ny - 2*Ny - 2*Nx) + 2*Nx*Ny; % bcs we only store nonzero elements
+    %plot:
+    sol1 = fliplr(reshape(sol2, [Ny,Nx]))';
+    Temp = [zeros(1,Nx+2);zeros(Ny,1),sol2,zeros(Ny,1);zeros(1,Nx+2)];
+    figure(2);
+    subplot(2,4,i);
+    surf(x,y,Temp);
+    subplot(2,4,4+i);
+    contour(Temp);
+    title({'Nx,Ny=',Nx});
+    
+    %clear some memory: 
+    clear sol2;
+    
+    %   3. by Gaus-Seidel:
+    tic; sol3 = GausSeidel(be, Nx, Ny); runtimes(3,i)=toc;
+    storage(3,i)= (Nx+2)*(Ny+2) + Nx*Ny;
+    %plot:
+    figure(3);
+    subplot(2,4,i);
+    surf(x,y,sol3);
+    subplot(2,4,4+i);
+    contour(sol3);
+    title({'Nx,Ny=',Nx});
 
+    
+    %%%%%%%%%% this part includes calculations for g)
+    error = 0;
+    for v=1:Ny
+        for s=1:Nx
+            error = error + (sol3(v+1,s+1) - sin(pi*v/(Ny+1))*sin(pi*s/(Nx+1)))^2;
+        end
+    end 
+    errors(1,i) = sqrt(1/(Nx*Ny) * error);
+    %%%%%%%%%%
+    
+    %clear some memory:
+    clear sol3;
 
-% c) Gaus-Seidel iterative solver.
-% In progress.. -Igor %
-
-% d) Solving the given system in three ways.
-%Finding the function vector of the second derivative
-
-[ x y ] = meshgrid( hx*(0:(Nx+1)), hy*(0:(Ny+1)) );
-f_der=T_der(x,y); %Evaluating the derivative
-f_der=f_der(2:Nx+1,2:Ny+1);   %Matrix to column, taking out the zeros
-f_der=f_der(:);
-
-%-   1. by MATLAB direct solver:
-tic
-
-Temperature=M\f_der;
-size_Full(i)=size(Temperature,1)+size(f_der,1)+ size(M,1)*size(M,2);
-Temperature=vec2mat(Temperature,Nx); %Vector to column. Columns are determined only by the Nx
-TempFull= [zeros(1,Nx+2);zeros(Ny,1),Temperature,zeros(Ny,1);zeros(1,Nx+2)]; %Inserting the boundary given conditions
-
-time_Full(i)=toc;
-%-   2. by direct solver on a sparse matrix:
-tic
-
-M=sparse(M);
-Temperature=M\f_der;
-size_Sparse(i)=size(Temperature,1)+size(f_der,1)+ nnz(M);
-Temperature=vec2mat(Temperature,Nx); %Vector to column. Columns are determined only by the Nx
-TempSparse= [zeros(1,Nx+2);zeros(Ny,1),Temperature,zeros(Ny,1);zeros(1,Nx+2)]; %Inserting the boundary given conditions
-
-time_Sparse(i)=toc;
-%   3. by Gaus-Seidel:
-
-%- e) Visualization of solutions.
-figure(1);
-subplot(2,4,plot_counter)
-surf(x,y,TempFull)
-subplot(2,4,plot_counter+1)
-contour(TempFull)
-title({'Nx,Ny=',Nx});
-
-figure(2);
-subplot(2,4,plot_counter)
-surf(x,y,TempSparse)
-subplot(2,4,plot_counter+1)
-contour(TempSparse)
-title({'Nx,Ny=',Nx});
-
-plot_counter=plot_counter+2;
-
-%- f) Runtime comparisons.
-
-
-
-% g) Errors.
 end
 
-%TABLES
 
+% f) Runtime and storage comparisons. TABLES:
 f=figure;
 tabgp = uitabgroup(f,'Position',[.05 .5 .95 .45]);
 cnames = {'Nx,Ny=7','Nx,Ny=15','Nx,Ny=31','Nx,Ny=63'};
 rnames = {'Runtime','Storage'};
 
 tab1 = uitab(tabgp,'Title','FullMatrix');
-data = [time_Full; size_Full];
+data = [runtime(1,1:end); storage(1, 1:end)];
 % Create the uitable
 t = uitable(tab1,'Data',data,'ColumnName',cnames,'RowName',rnames);
 % Set width and height
@@ -93,9 +121,8 @@ t.Position(3) = t.Extent(3);
 t.Position(4) = t.Extent(4);
 
 
-
 tab2 = uitab(tabgp,'Title','SparseMatrix');
-data = [time_Sparse; size_Sparse];
+data = [runtime(2,1:end); storage(2, 1:end)];
 % Create the uitable
 t = uitable(tab2,'Data',data,'ColumnName',cnames,'RowName',rnames);
 % Set width and height
@@ -103,4 +130,53 @@ t.Position(3) = t.Extent(3);
 t.Position(4) = t.Extent(4);
 
 
+tab3 = uitab(tabgp,'Title','Gaus-Seidel');
+data = [runtime(3,1:end); storage(3, 1:end)];
+% Create the uitable
+t = uitable(tab3,'Data',data,'ColumnName',cnames,'RowName',rnames);
+% Set width and height
+t.Position(3) = t.Extent(3);
+t.Position(4) = t.Extent(4);
 
+
+
+% g) Errors.
+% (now it only remains to calculate for n=128, and error reductions)
+Nx=128; Ny=128;
+tempvec = repmat(1:Ny,Nx,1);
+be = b(Nx,Ny, tempvec);
+
+sol3 = GausSeidel(be, Nx, Ny);
+
+error = 0;
+for v=1:Ny
+    for s=1:Nx
+        error = error + (sol3(v+1,s+1) - sin(pi*v/(Ny+1))*sin(pi*s/(Nx+1)))^2;
+    end
+end 
+errors(1,5) = sqrt(1/(Nx*Ny) * error);
+
+%lets clean some memory:
+clear sol3;
+
+%error reduction factors:
+%(when making table: errors(2,1)='-')
+for k = 2:5
+    errors(2,k) = errors(1,k-1)/errors(1,k);
+end
+
+%TABLES
+f=figure;
+tabgp = uitabgroup(f,'Position',[.05 .5 .95 .45 .40]);
+cnames = {'Nx,Ny=7','Nx,Ny=15','Nx,Ny=31','Nx,Ny=63', 'Nx,Ny=128'};
+rnames = {'Error', 'Error red.'};
+
+tab = uitab(tabgp,'Title','Gauss-Seidel Errors');
+data = [errors(1,1:end); '-', errors(2, 2:end)];
+% Create the uitable
+t = uitable(tab,'Data', data,'ColumnName', cnames,'RowName', rnames);
+% Set width and height
+t.Position(3) = t.Extent(3);
+t.Position(4) = t.Extent(4);
+
+    
