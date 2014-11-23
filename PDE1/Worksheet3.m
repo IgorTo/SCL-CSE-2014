@@ -41,7 +41,7 @@ for i=1:4
     [x,y] = meshgrid(1/(Nx+1)*(0:(Nx+1)), 1/(Ny+1)*(0:(Ny+1)));
     %
     tempvec = repmat(1:Ny,Nx,1);  % d = repmat(1:Ny,Nx,1)
-    be = b(Nx,Ny, tempvec);
+    be = b(Nx,Ny, tempvec)';
 
     M = SystemMatrix(Nx,Ny);
     m = sparse(M);
@@ -54,29 +54,31 @@ for i=1:4
     Temp = [zeros(1,Nx+2);zeros(Ny,1),sol1,zeros(Ny,1);zeros(1,Nx+2)];
     figure(1);
     subplot(2,4,i);
+    title({'Nx,Ny=',Nx});
     surf(x,y,Temp);
     subplot(2,4,4+i);
     contour(Temp);
-    title({'Nx,Ny=',Nx});
     
     %clear some memory: 
     clear sol1;
+    clear Temp;
     
     %   2. by direct solver on a sparse matrix:
     tic; sol2 = m\be; runtimes(2,i)=toc;
     storage(2,i) = (5*Nx*Ny - 2*Ny - 2*Nx) + 2*Nx*Ny; % bcs we only store nonzero elements
     %plot:
-    sol1 = fliplr(reshape(sol2, [Ny,Nx]))';
+    sol2 = fliplr(reshape(sol2, [Ny,Nx]))';
     Temp = [zeros(1,Nx+2);zeros(Ny,1),sol2,zeros(Ny,1);zeros(1,Nx+2)];
     figure(2);
     subplot(2,4,i);
+    title({'Nx,Ny=',Nx});
     surf(x,y,Temp);
     subplot(2,4,4+i);
     contour(Temp);
-    title({'Nx,Ny=',Nx});
     
     %clear some memory: 
     clear sol2;
+    clear Temp;
     
     %   3. by Gaus-Seidel:
     tic; sol3 = GausSeidel(be, Nx, Ny); runtimes(3,i)=toc;
@@ -84,10 +86,10 @@ for i=1:4
     %plot:
     figure(3);
     subplot(2,4,i);
+    title({'Nx,Ny=',Nx});
     surf(x,y,sol3);
     subplot(2,4,4+i);
     contour(sol3);
-    title({'Nx,Ny=',Nx});
 
     
     %%%%%%%%%% this part includes calculations for g)
