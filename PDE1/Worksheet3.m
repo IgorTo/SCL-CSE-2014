@@ -143,8 +143,8 @@ t.Position(4) = t.Extent(4);
 
 
 % g) Errors.
-% (now it only remains to calculate for n=128, and error reductions)
-Nx=128; Ny=128;
+% (now it only remains to calculate for n=127, and error reductions)
+Nx=127; Ny=127;
 tempvec = repmat(1:Ny,Nx,1);
 be = b(Nx,Ny, tempvec);
 
@@ -170,11 +170,11 @@ end
 %TABLES
 f=figure;
 tabgp = uitabgroup(f,'Position',[.05 .5 .95 .45]);
-cnames = {'Nx,Ny=7','Nx,Ny=15','Nx,Ny=31','Nx,Ny=63', 'Nx,Ny=128'};
+cnames = {'Nx,Ny=7','Nx,Ny=15','Nx,Ny=31','Nx,Ny=63', 'Nx,Ny=127'};
 rnames = {'Error', 'Error red.'};
 
 tab = uitab(tabgp,'Title','Gauss-Seidel Errors');
-data = [errors(1,1:end); '-', errors(2, 2:end)];
+data = [errors(1,1:end); NaN, errors(2, 2:end)];
 % Create the uitable
 t = uitable(tab,'Data', data,'ColumnName', cnames,'RowName', rnames);
 % Set width and height
