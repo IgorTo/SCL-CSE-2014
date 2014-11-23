@@ -1,5 +1,5 @@
 %   Worksheet 3
-% (I. Tominec, J. C. Medina, E. Breznik)
+% (E. Breznik, J. C. Medina, I. Tominec)
 %
 % -Solving partial differential equations.
 % -----------------------------------------------
