@@ -36,6 +36,7 @@ f_der=f_der(:);
 tic
 
 Temperature=M\f_der;
+size_Full(i)=size(Temperature,1)+size(f_der,1)+ size(M,1)*size(M,2);
 Temperature=vec2mat(Temperature,Nx); %Vector to column. Columns are determined only by the Nx
 TempFull= [zeros(1,Nx+2);zeros(Ny,1),Temperature,zeros(Ny,1);zeros(1,Nx+2)]; %Inserting the boundary given conditions
 
@@ -45,6 +46,7 @@ tic
 
 M=sparse(M);
 Temperature=M\f_der;
+size_Sparse(i)=size(Temperature,1)+size(f_der,1)+ nnz(M);
 Temperature=vec2mat(Temperature,Nx); %Vector to column. Columns are determined only by the Nx
 TempSparse= [zeros(1,Nx+2);zeros(Ny,1),Temperature,zeros(Ny,1);zeros(1,Nx+2)]; %Inserting the boundary given conditions
 
@@ -83,7 +85,7 @@ cnames = {'Nx,Ny=7','Nx,Ny=15','Nx,Ny=31','Nx,Ny=63'};
 rnames = {'Runtime','Storage'};
 
 tab1 = uitab(tabgp,'Title','FullMatrix');
-data = [time_Full; zeros(1,4)];
+data = [time_Full; size_Full];
 % Create the uitable
 t = uitable(tab1,'Data',data,'ColumnName',cnames,'RowName',rnames);
 % Set width and height
@@ -93,7 +95,7 @@ t.Position(4) = t.Extent(4);
 
 
 tab2 = uitab(tabgp,'Title','SparseMatrix');
-data = [time_Sparse; zeros(1,4)];
+data = [time_Sparse; size_Sparse];
 % Create the uitable
 t = uitable(tab2,'Data',data,'ColumnName',cnames,'RowName',rnames);
 % Set width and height

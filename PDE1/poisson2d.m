@@ -24,6 +24,7 @@ title('S')
 % modified during the iteration.
 f = x;
 
+
 % Compute residual r
 norm_r = residualNorm(f, S, hx, hy)
 
@@ -69,7 +70,7 @@ function f = relaxJacobi(f, S, hx, hy)
 end
 
 function f = relaxGS(f, S, hx, hy)
-    J = 2:(size(f, 1)-1);
+    J = 2:(size(f, 1)-1)
     K = 2:(size(f, 2)-1);
    
     for k = K
