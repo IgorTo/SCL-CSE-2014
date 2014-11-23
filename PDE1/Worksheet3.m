@@ -6,7 +6,7 @@
 clear all; close all;
 
 % Set parameter b of the problem:
-b = @(Nx, Ny, d) -2*pi*(sin(pi*repmat(1:Nx, 1, Ny)/(Nx+1)).*sin(pi*d(1:end)/(Ny+1)));
+b = @(Nx, Ny, d) -2*pi^2*(sin(pi*repmat(1:Nx, 1, Ny)/(Nx+1)).*sin(pi*d(1:end)/(Ny+1)));
 
 % b) Building the system matrix is done by SystemMatrix, e.g.
 % Nx = 5;
