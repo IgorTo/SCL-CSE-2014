@@ -54,8 +54,8 @@ for i=1:4
     Temp = [zeros(1,Nx+2);zeros(Ny,1),sol1,zeros(Ny,1);zeros(1,Nx+2)];
     figure(1);
     subplot(2,4,i);
-    surf(x,y,Temp);
     title({'Nx,Ny=',Nx});
+    surf(x,y,Temp);
     subplot(2,4,4+i);
     contour(Temp);
     
@@ -71,8 +71,8 @@ for i=1:4
     Temp = [zeros(1,Nx+2);zeros(Ny,1),sol2,zeros(Ny,1);zeros(1,Nx+2)];
     figure(2);
     subplot(2,4,i);
-    surf(x,y,Temp);
     title({'Nx,Ny=',Nx});
+    surf(x,y,Temp);
     subplot(2,4,4+i);
     contour(Temp);
     
@@ -86,8 +86,8 @@ for i=1:4
     %plot:
     figure(3);
     subplot(2,4,i);
-    surf(x,y,sol3);
     title({'Nx,Ny=',Nx});
+    surf(x,y,sol3);
     subplot(2,4,4+i);
     contour(sol3);
 
@@ -169,7 +169,7 @@ end
 
 %TABLES
 f=figure;
-tabgp = uitabgroup(f,'Position',[.05 .5 .95 .45]);
+tabgp = uitabgroup(f,'Position',[.05 .5 .95 .45 .40]);
 cnames = {'Nx,Ny=7','Nx,Ny=15','Nx,Ny=31','Nx,Ny=63', 'Nx,Ny=128'};
 rnames = {'Error', 'Error red.'};
 
