@@ -7,13 +7,14 @@ clear all; close all;
 
 % Setting the Simulation parameters. Grid size, time step, initial values.
 NxNy=[3, 7, 15, 31]; % Grid size Nx=Ny for different cases.
+NxNy=NxNy+1;
 dt=[1/64, 1/128, 1/256, 1/512, 1/1024, 1/2048, 1/4096]; % Delta t's for different cases.
 times=[1/8, 2/8, 3/8, 4/8]; % At these times we want to observe the solution of PDE.
 y0=1; % initial value u(x,y,0)=1. It is the same for each value M(i,j) in the grid.
 
 tic;
 for j=1:length(times)
-	
+	if (times(j) == 2) break; end % !!! Just for testing.
 	folder=['t=' int2str(j) ':8']; % Making a folder for images within the current time at which we observe PDE.
 	mkdir(folder);
 
@@ -46,7 +47,7 @@ for j=1:length(times)
                         plotCnt=plotCnt+1;
 			mesh(M); % We plot the solution to the set subplot area.
 
-			figure(99); mesh(M); % We plot the solution to separate figure, which we also save as a PNG to folder and file with meaningful names.
+			figure(99); mesh(M); % We plot the solution to one temporary figure, which we also save as a PNG to folder and file with meaningful names.
 			imgPath=[folder '/' int2str(NxNy(i)) 'x' int2str(NxNy(i)) '-1:' int2str(2^(5+k)) '.png'];
 			title(imgPath); saveas(99, imgPath);
 			close 99
