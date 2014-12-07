@@ -1,3 +1,27 @@
+%Tables 
+%Stability
+stable=[1 1 1 1 1 1 1;
+        0 0 1 1 1 1 1;
+        0 0 0 0 1 1 1;
+        0 0 0 0 0 0 1];
+%TABLES
+
+f=figure;
+tabgp = uitabgroup(f,'Position',[.04 .5 .95 .45]);
+cnames = {'dt=1/64','dt=1/128','dt=1/256','dt=1/512', 'dt=1/1024', 'dt=1/2048', 'dt=1/4096'};
+rnames = {'N=3', 'N=7','N=15', 'N=31'};
+
+tab = uitab(tabgp,'Title','Stable Solutions');
+data = [stable];
+% Create the uitable
+t = uitable(tab,'Data', data,'ColumnName', cnames,'RowName', rnames);
+% Set width and height
+t.Position(3) = t.Extent(3);
+t.Position(4) = t.Extent(4);
+
+
+
+
 % Worksheet 4
 % (E. Breznik, J. C. Medina, I. Tominec)
 %
