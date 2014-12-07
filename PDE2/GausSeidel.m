@@ -14,7 +14,7 @@ function x = GausSeidel(Nx, Ny, old, dt)
 % Initializing nonzero values of the matrix:
 B = dt*(Nx+1)^2;
 C = dt*(Ny+1)^2;
-A = 1+2*dt*(B+C);
+A = 1+2*(B+C);
 
 % Setting starting approximation matrix:
 x = zeros(Nx+2, Ny+2);
